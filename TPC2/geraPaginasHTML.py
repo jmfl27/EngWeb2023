@@ -42,6 +42,13 @@ for c in cidades:
                             <li><a href ="{d['id']}">{d["nome"]}</a> - {l["distância"]} Km</li>
                         </ul>
                     """
+        if l["destino"] == c["id"]:
+            for d in cidades:
+                if d["id"] == l["origem"]:
+                    pagHTML += f"""<ul>
+                                <li><a href ="{d['id']}">{d["nome"]}</a> - {l["distância"]} Km</li>
+                            </ul>
+                        """
 
 
     pagHTML += f"""
