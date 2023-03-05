@@ -95,16 +95,53 @@ http.createServer(function (req, res) {
                 res.end("<p>ERRO: " + erro + "</p>")
             })
     }
+    // PÁGINA DE SEXO ESPECÍFICO
     else if(req.url.match(/sexo\/\w+/)){
+        axios.get('http://localhost:3000/pessoas')
+            .then(function(resp){
+                var pessoas = resp.data
+                let pessoasOrdenadas = pessoas.sort(
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
+                )
+                var sexo = decodeURIComponent(req.url.substring(6).replace(/=/g, "%"))
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end(mypages.genPagSexoEscolhido(sexo,pessoasOrdenadas, d))
+            })
+            .catch(erro => {
+                console.log("Erro: " + erro)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end("<p>ERRO: " + erro + "</p>")
+            })
+    }
+    // PÁGINA DE DISTRIBUIÇÃO POR DESPORTO
+    else if(req.url == '/desporto'){
         axios.get('http://localhost:3000/pessoas')
             .then(function(resp){
                 var pessoas = resp.data
                 let pessoasOrdenadas = pessoas.sort(
                     (p1, p2) => (p1.nome < p2.nome) ? 1 : -1
                 )
-                var sexo = req.url.substring(6)
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
-                res.end(mypages.genPagSexoEscolhido(sexo,pessoasOrdenadas, d))
+                res.end(mypages.genPagDistDesporto(pessoasOrdenadas, d))
+            })
+            .catch(erro => {
+                console.log("Erro: " + erro)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end("<p>ERRO: " + erro + "</p>")
+            })
+    }
+    // PÁGINA DE DESPORTO ESPECÍFICO
+    else if(req.url.match(/desporto\/\w+/)){
+        axios.get('http://localhost:3000/pessoas')
+            .then(function(resp){
+                var pessoas = resp.data
+                let pessoasOrdenadas = pessoas.sort(
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
+                )
+                var desporto = decodeURIComponent(req.url.substring(10).replace(/=/g, "%"))
+                console.log(desporto)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end(mypages.genPagDespEscolhido(desporto,pessoasOrdenadas, d))
             })
             .catch(erro => {
                 console.log("Erro: " + erro)
