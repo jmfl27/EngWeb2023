@@ -13,7 +13,20 @@ http.createServer(function (req, res) {
         res.write(mypages.genIndex(d))
         res.end()
     }
-    // LISTA DE PESSOAS (ASCENDENTE)
+    // CSS
+    else if(req.url.match('/w3.css')){
+        fs.readFile('w3.css', function(err, data) {
+            res.writeHead(200, {'Content-Type': 'text/css'})
+            if(err){
+                res.write("Erro na leitura do ficheiro: " + err)
+            }
+            else{
+                res.write(data)
+            }
+            res.end()
+        })
+    }
+    // LISTA DE PESSOAS (A-Z)
     else if(req.url == '/pessoas'){
         axios.get('http://localhost:3000/pessoas')
             .then(function(resp){
@@ -32,8 +45,8 @@ http.createServer(function (req, res) {
                 res.end("<p>ERRO: " + erro + "</p>")
             })
     }
-    // LISTA DE PESSOAS (DESCENDENTE)
-    else if(req.url == '/ordDesc'){
+    // LISTA DE PESSOAS (Z-A)
+    else if(req.url == '/pessoas/reverse'){
         axios.get('http://localhost:3000/pessoas')
             .then(function(resp){
                 var pessoas = resp.data
@@ -65,26 +78,13 @@ http.createServer(function (req, res) {
                 res.end("<p>ERRO: " + erro + "</p>")
             })
     }
-    // CSS
-    else if(req.url.match('/w3.css')){
-        fs.readFile('w3.css', function(err, data) {
-            res.writeHead(200, {'Content-Type': 'text/css'})
-            if(err){
-                res.write("Erro na leitura do ficheiro: " + err)
-            }
-            else{
-                res.write(data)
-            }
-            res.end()
-        })
-    }
     // PÁGINA DE DISTRIBUIÇÃO POR SEXO
     else if(req.url == '/sexo'){
         axios.get('http://localhost:3000/pessoas')
             .then(function(resp){
                 var pessoas = resp.data
                 let pessoasOrdenadas = pessoas.sort(
-                    (p1, p2) => (p1.nome < p2.nome) ? 1 : -1
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
                 )
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
                 res.end(mypages.genPagDistSexo(pessoasOrdenadas, d))
@@ -119,7 +119,7 @@ http.createServer(function (req, res) {
             .then(function(resp){
                 var pessoas = resp.data
                 let pessoasOrdenadas = pessoas.sort(
-                    (p1, p2) => (p1.nome < p2.nome) ? 1 : -1
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
                 )
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
                 res.end(mypages.genPagDistDesporto(pessoasOrdenadas, d))
@@ -139,9 +139,43 @@ http.createServer(function (req, res) {
                     (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
                 )
                 var desporto = decodeURIComponent(req.url.substring(10).replace(/=/g, "%"))
-                console.log(desporto)
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
                 res.end(mypages.genPagDespEscolhido(desporto,pessoasOrdenadas, d))
+            })
+            .catch(erro => {
+                console.log("Erro: " + erro)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end("<p>ERRO: " + erro + "</p>")
+            })
+    }
+    // PÁGINA DE TOP 10 DE PROFISSOES
+    else if(req.url == '/profissao'){
+        axios.get('http://localhost:3000/pessoas')
+            .then(function(resp){
+                var pessoas = resp.data
+                let pessoasOrdenadas = pessoas.sort(
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
+                )
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end(mypages.genPagTopProf(10,pessoasOrdenadas, d))
+            })
+            .catch(erro => {
+                console.log("Erro: " + erro)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end("<p>ERRO: " + erro + "</p>")
+            })
+    }
+    // PÁGINA DE PROFISSAO ESPECÍFICA
+    else if(req.url.match(/profissao\/\w+/)){
+        axios.get('http://localhost:3000/pessoas')
+            .then(function(resp){
+                var pessoas = resp.data
+                let pessoasOrdenadas = pessoas.sort(
+                    (p1, p2) => (p1.nome < p2.nome) ? -1 : 1
+                )
+                var profissao = decodeURIComponent(req.url.substring(11).replace(/=/g, "%"))
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end(mypages.genPagProfEscolhido(profissao,pessoasOrdenadas, d))
             })
             .catch(erro => {
                 console.log("Erro: " + erro)
