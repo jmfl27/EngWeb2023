@@ -26,8 +26,23 @@ http.createServer(function (req, res) {
             res.end()
         })
     }
-    // LISTA DE PESSOAS (A-Z)
+    // LISTA DE PESSOAS (ORDENADA POR ID)
     else if(req.url == '/pessoas'){
+        axios.get('http://localhost:3000/pessoas')
+            .then(function(resp){
+                var pessoas = resp.data
+                    
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end(mypages.genListaPesID(pessoas, d))
+            })
+            .catch(erro => {
+                console.log("Erro: " + erro)
+                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+                res.end("<p>ERRO: " + erro + "</p>")
+            })
+    }
+    // LISTA DE PESSOAS (A-Z)
+    else if(req.url == '/pessoas/alfa'){
         axios.get('http://localhost:3000/pessoas')
             .then(function(resp){
                 var pessoas = resp.data
@@ -36,24 +51,6 @@ http.createServer(function (req, res) {
                 )
                       
                 console.log("Recuperei " + pessoas.length + " registos")       
-                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
-                res.end(mypages.genListaPes(pessoasOrdenadas, d))
-            })
-            .catch(erro => {
-                console.log("Erro: " + erro)
-                res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
-                res.end("<p>ERRO: " + erro + "</p>")
-            })
-    }
-    // LISTA DE PESSOAS (Z-A)
-    else if(req.url == '/pessoas/reverse'){
-        axios.get('http://localhost:3000/pessoas')
-            .then(function(resp){
-                var pessoas = resp.data
-                let pessoasOrdenadas = pessoas.sort(
-                    (p1, p2) => (p1.nome < p2.nome) ? 1 : -1
-                )
-        
                 res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
                 res.end(mypages.genListaPes(pessoasOrdenadas, d))
             })
