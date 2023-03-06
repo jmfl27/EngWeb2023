@@ -95,12 +95,19 @@ exports.genListaPes = function(lista, data){
     return pagHTML
 }
 
+// FONTE DA PRIMEIRA PARTE: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+function trataAtributo(string) {
+    var aux =  string.charAt(0).toUpperCase() + string.slice(1)
+    var res = aux.replaceAll("_"," ")
+    return res
+}
+
 exports.genPessoaPage = function(pessoa, data){
     var pagHTML = `
     <!DOCTYPE html>
     <head>
         <meta charset= "UTF-8">
-        <title>About people...</title>
+        <title>Sobre ${pessoa.nome}</title>
         <link rel="stylesheet" href = "w3.css"/>
     </head>
         <body>
@@ -112,7 +119,73 @@ exports.genPessoaPage = function(pessoa, data){
                 <div class="w3-container">
                 `
 
-    //TODO: TERMINAR CONSTRUIR PAG HTML
+    const atributos = Object.keys(pessoa)
+
+    for(let i=0; i<atributos.length;i++){
+        // se for array
+        if(Array.isArray(pessoa[atributos[i]])){
+            pagHTML += `
+                <div class="w3-panel w3-sand">
+                    <p><b>${trataAtributo(atributos[i])}:</b> 
+                    `     
+                
+            for(let j = 0; j<pessoa[atributos[i]].length; j++){
+                    pagHTML += `
+                    ${pessoa[atributos[i]][j]}
+                        `
+                             
+                if(j != (pessoa[atributos[i]].length - 1)){
+                    pagHTML += ','
+                }
+            }
+
+            pagHTML += `
+                    </p>
+                </div>
+            `      
+        }
+
+        // se for dicionario
+        else if (typeof pessoa[atributos[i]] == "object"){
+            for(const [at,val] of Object.entries(pessoa[atributos[i]])){
+                if (val == true){
+                    pagHTML += `
+                            <div class="w3-panel w3-sand">
+                                <p><b>${trataAtributo(at)}?:</b> Sim</p>
+                            </div>
+                        `
+                }
+
+                else if (val == false){
+                    pagHTML += `
+                            <div class="w3-panel w3-sand">
+                                <p><b>${trataAtributo(at)}?:</b> Não</p>
+                            </div>
+                        `
+                }
+
+                else{
+                    pagHTML += `
+                        <div class="w3-panel w3-sand">
+                            <p><b>${trataAtributo(at)}:</b> ${val}</p>
+                        </div>
+                    `
+                }
+            }
+
+        }
+
+        // caso seja um so valor
+        else{
+            pagHTML += `
+                <div class="w3-panel w3-sand">
+                    <p><b>${trataAtributo(atributos[i])}:</b> ${pessoa[atributos[i]]}</p>
+                </div>
+            `
+        }
+
+    }
+
     pagHTML += `
                     </div>
         
