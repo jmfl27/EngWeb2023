@@ -40,13 +40,15 @@ var alunosServer = http.createServer(function (req, res) {
         switch(req.method){
             case "GET": 
                 // GET /alunos --------------------------------------------------------------------
-                if((req.url == "/") || (req.url == "/alunos")){
-                    axios.get("http://localhost:3000/alunos?_sort=nome")
+                if((req.url == "/") || (req.url == "/tasks")){
+                    axios.get("http://localhost:3000/tasks?_sort=due")
                         .then(response => {
-                            var alunos = response.data
-                            // Render page with the student's list
+                            var tasks = response.data
+                            var idTarefa = tasks.length + 1
+
+
                             res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
-                            res.write(templates.studentsListPage(alunos, d))
+                            res.write(templates.mainPage(idTarefa,users,tasks,d))
                             res.end()
                         })
                         .catch(function(erro){
