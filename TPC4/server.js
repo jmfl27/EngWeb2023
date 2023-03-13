@@ -28,7 +28,7 @@ function collectRequestBodyData(request, callback) {
 // Server creation
 
 // TODO: 
-// - editar tarefa (POST: /tasks/edit/1)
+// - editar tarefa (POST: /tasks/edit/:id)
 var tarefasServer = http.createServer(function (req, res) {
     // Logger: what was requested and when it was requested
     var d = new Date().toISOString().substring(0, 16)
@@ -224,13 +224,32 @@ var tarefasServer = http.createServer(function (req, res) {
                                 "name" : result.name,
                                 "usrnm" : result.usrnm
                             })
-                                    .then(resp => {
-                                        res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write(templates.successPage(d,JSON.stringify(result)))
+                            .then(resp => {
+                                axios.get("http://localhost:3000/tasks?_sort=due")
+                                .then(response => {
+                                    var tasks = response.data
+                                    var idTarefa = tasks.length + 1
+
+                                    axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                        var users = resp.data
+                                        res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                        res.write(templates.mainPage(idTarefa,users,tasks,d))
                                         res.end()
-                                    }).catch(error => {
-                                        console.log('Erro: ' + error);
                                     })
+                                    .catch(function(erro){
+                                        res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                        res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                        res.end()
+                                    })
+                                })
+                                .catch(function(erro){
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                    res.end()
+                                })
+                            }).catch(error => {
+                                console.log('Erro: ' + error);
+                            })
                         }
                         else{
                             res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
@@ -250,10 +269,68 @@ var tarefasServer = http.createServer(function (req, res) {
                                 "who" : result.who,
                                 "done" : result.done
                             })
+                            .then(resp => {
+                                axios.get("http://localhost:3000/tasks?_sort=due")
+                            .then(response => {
+                                var tasks = response.data
+                                var idTarefa = tasks.length + 1
+
+                                axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                    var users = resp.data
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write(templates.mainPage(idTarefa,users,tasks,d))
+                                    res.end()
+                                })
+                                .catch(function(erro){
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                    res.end()
+                                })
+                            })
+                            .catch(function(erro){
+                                res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                res.end()
+                            })
+                            }).catch(error => {
+                                console.log('Erro: ' + error);
+                        })
+                        }
+                        else{
+                            res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
+                            res.write("<p>Unable to collect data from body...</p>")
+                            res.end()
+                        }
+                    });
+                }
+                //POST /tasks/edit/:id
+                else if(/\/tasks\/edit\/[0-9]+$/i.test(req.url)){
+                    collectRequestBodyData(req, result => {
+                        if(result){
+                            axios.put('http://localhost:3000/tasks/'+ result.id, result)
                                     .then(resp => {
-                                        res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write(templates.successPage(d,JSON.stringify(result)))
-                                        res.end()
+                                        axios.get("http://localhost:3000/tasks?_sort=due")
+                            .then(response => {
+                                var tasks = response.data
+                                var idTarefa = tasks.length + 1
+
+                                axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                    var users = resp.data
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write(templates.mainPage(idTarefa,users,tasks,d))
+                                    res.end()
+                                })
+                                .catch(function(erro){
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                    res.end()
+                                })
+                            })
+                            .catch(function(erro){
+                                res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                res.end()
+                            })
                                     }).catch(error => {
                                         console.log('Erro: ' + error);
                                     })
@@ -270,9 +347,28 @@ var tarefasServer = http.createServer(function (req, res) {
                         if(result){
                             axios.put('http://localhost:3000/alunos/'+ result.id, result)
                                     .then(resp => {
-                                        res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write('<p>Update: ' + JSON.stringify(result) +'</p>')
-                                        res.end()
+                                        axios.get("http://localhost:3000/tasks?_sort=due")
+                            .then(response => {
+                                var tasks = response.data
+                                var idTarefa = tasks.length + 1
+
+                                axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                    var users = resp.data
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write(templates.mainPage(idTarefa,users,tasks,d))
+                                    res.end()
+                                })
+                                .catch(function(erro){
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                    res.end()
+                                })
+                            })
+                            .catch(function(erro){
+                                res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                res.end()
+                            })
                                     }).catch(error => {
                                         console.log('Erro: ' + error);
                                     })

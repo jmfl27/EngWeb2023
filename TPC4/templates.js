@@ -122,7 +122,8 @@ exports.userFormPage = function(idUser,data){
             <body>
             <div class="w3-card-4">
                 <header class="w3-container w3-red">
-                    <h2>Formulário de Novo Utilizador</h2>
+                    <h2>Formulário de Novo Utilizador <a href="/"</h2>
+                    <h3><a href="/" class="w3-btn w3-pale-red"><b>Voltar ao Início</b></a></h3>
                 </header>
             
                 <form class="w3-container" method="POST">
@@ -166,6 +167,7 @@ exports.tarefaFormEditPage = function(tarefa,users,data){
         <div class="w3-card-4">
             <header class="w3-container w3-red">
                 <h2>Editar Tarefa</h2>
+                <h3><a href="/" class="w3-btn w3-pale-red"><b>Voltar ao Início</b></a></h3>
             </header>
         
             <form class="w3-container w3-card-4" method="POST">
@@ -174,7 +176,7 @@ exports.tarefaFormEditPage = function(tarefa,users,data){
                 <input type="hidden" name="id" value=${tarefa.id}>
 
                 <p><label>Descrição da tarefa</label>
-                <input class="w3-input w3-border" name="desc" type="text" value=${tarefa.desc}></p>
+                <input class="w3-input w3-border" name="desc" type="text" value="${tarefa.desc}"></p>
 
                 <p><label>Qual a data limite?</label>
                 <input class="w3-input w3-border" type="date" name="due" value=${tarefa.due}>
@@ -229,7 +231,7 @@ exports.successPage = function(data,registo){
         
             <form class="w3-container">
             <p>${registo} foi efetuado com sucesso!</p>
-            <a href="/" class="w3-btn w3-purple"><b>Voltar ao Início</b></a>
+            <a href="/" class="w3-btn w3-pale-red"><b>Voltar ao Início</b></a>
             </form>
 
                 <footer class="w3-container w3-yellow">
