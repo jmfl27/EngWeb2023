@@ -27,6 +27,10 @@ function collectRequestBodyData(request, callback) {
 
 // Server creation
 
+// TODO: 
+// - apagar tarefa (GET /tasks/delete/:id)
+// - meter tarefa como feita (GET /tasks/done/:id)
+// - criar utilizador  (POST request: /users/create)
 var tarefasServer = http.createServer(function (req, res) {
     // Logger: what was requested and when it was requested
     var d = new Date().toISOString().substring(0, 16)
