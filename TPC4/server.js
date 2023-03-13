@@ -28,9 +28,7 @@ function collectRequestBodyData(request, callback) {
 // Server creation
 
 // TODO: 
-// - apagar tarefa (GET /tasks/delete/:id)
-// - meter tarefa como feita (GET /tasks/done/:id)
-// - criar utilizador  (POST request: /users/create)
+// - editar tarefa (POST: /tasks/edit/1)
 var tarefasServer = http.createServer(function (req, res) {
     // Logger: what was requested and when it was requested
     var d = new Date().toISOString().substring(0, 16)
@@ -109,6 +107,84 @@ var tarefasServer = http.createServer(function (req, res) {
                             res.end()
                         })
                 }
+                // GET /tasks/done/:id  --------------------------------------------------------------------
+                else if(/\/tasks\/done\/[0-9]+$/i.test(req.url)){
+                    var idTask = req.url.split("/")[3]
+                    axios.get("http://localhost:3000/tasks/" + idTask)
+                        .then( response => {
+                            let tas = response.data
+                                axios.put('http://localhost:3000/tasks/' + idTask, {
+                                    "id" : tas.id,
+                                    "desc" : tas.desc,
+                                    "due" : tas.due,
+                                    "who" : tas.who,
+                                    "done" : "true"
+                                })
+                                .then(resp => {
+                                    axios.get("http://localhost:3000/tasks?_sort=due")
+                                    .then(response => {
+                                        var tasks = response.data
+                                        var idTarefa = tasks.length + 1
+
+                                        axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                            var users = resp.data
+                                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                            res.write(templates.mainPage(idTarefa,users,tasks,d))
+                                            res.end()
+                                        })
+                                        .catch(function(erro){
+                                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                            res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                            res.end()
+                                        })
+                                    })
+                                    .catch(function(erro){
+                                        res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                        res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                        res.end()
+                                    })
+                                       
+                                }).catch(error => {
+                                    console.log('Erro: ' + error);
+                                })
+
+                        }).catch(function(erro){
+                            res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                            res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                            res.end()
+                        })
+                }
+                // GET /tasks/delete/:id
+                else if(/\/tasks\/delete\/[0-9]+$/i.test(req.url)){
+                    var idTask = req.url.split("/")[3]
+                    axios.delete('http://localhost:3000/tasks/'+ idTask)
+                        .then(resp => {
+                            axios.get("http://localhost:3000/tasks?_sort=due")
+                            .then(response => {
+                                var tasks = response.data
+                                var idTarefa = tasks.length + 1
+
+                                axios.get("http://localhost:3000/users?_sort=id").then(resp => {
+                                    var users = resp.data
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write(templates.mainPage(idTarefa,users,tasks,d))
+                                    res.end()
+                                })
+                                .catch(function(erro){
+                                    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                    res.write("<p>Não foi possível obter a lista de utilizadores... Erro: " + erro)
+                                    res.end()
+                                })
+                            })
+                            .catch(function(erro){
+                                res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'})
+                                res.write("<p>Não foi possível obter a lista de tarefas... Erro: " + erro)
+                                res.end()
+                            })
+                        }).catch(error => {
+                            console.log('Erro: ' + error);
+                    })
+                }
                 // GET /alunos/:id --------------------------------------------------------------------
                 else if(/\/alunos\/(A|PG)[0-9]+$/i.test(req.url)){
                     var idAluno = req.url.split("/")[2]
@@ -143,14 +219,14 @@ var tarefasServer = http.createServer(function (req, res) {
                 if(req.url == '/users/create'){
                     collectRequestBodyData(req, result => {
                         if(result){
-                            axios.post('http://localhost:3000/users/'+ result.id, {
+                            axios.post('http://localhost:3000/users/', {
                                 "id" : result.id,
                                 "name" : result.name,
                                 "usrnm" : result.usrnm
                             })
                                     .then(resp => {
                                         res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write('<p>Update: ' + JSON.stringify(resp.data) +'</p>')
+                                        res.write(templates.successPage(d,JSON.stringify(result)))
                                         res.end()
                                     }).catch(error => {
                                         console.log('Erro: ' + error);
@@ -163,7 +239,8 @@ var tarefasServer = http.createServer(function (req, res) {
                         }
                     });
                 }
-                if(req.url == '/tasks/create'){
+                // POST /tasks/create 
+                else if(req.url == '/tasks/create'){
                     collectRequestBodyData(req, result => {
                         if(result){
                             axios.post('http://localhost:3000/tasks/', {
@@ -175,7 +252,7 @@ var tarefasServer = http.createServer(function (req, res) {
                             })
                                     .then(resp => {
                                         res.writeHead(201, {'Content-Type': 'text/html;charset=utf-8'})
-                                        res.write('<p>Update: ' + JSON.stringify(resp.data) +'</p>')
+                                        res.write(templates.successPage(d,JSON.stringify(result)))
                                         res.end()
                                     }).catch(error => {
                                         console.log('Erro: ' + error);

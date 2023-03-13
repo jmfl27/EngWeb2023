@@ -4,6 +4,16 @@
       "id": "1",
       "name": "João Loureiro",
       "usrnm": "juaum"
+    },
+    {
+      "id": "2",
+      "name": "Arlindo Serra",
+      "usrnm": "arlindusserranus"
+    },
+    {
+      "id": "3",
+      "name": " Quim Barreiros",
+      "usrnm": "quim_Cabritas"
     }
   ],
   "tasks": [
@@ -16,9 +26,16 @@
     },
     {
       "id": "2",
-      "desc": "Entregar CG",
+      "desc": "Entrega de CG",
       "due": "2023-03-10",
       "who": "João Loureiro",
+      "done": "false"
+    },
+    {
+      "id": "3",
+      "desc": "Ir á garagem da vizinha",
+      "due": "2023-04-05",
+      "who": "Quim Barreiros",
       "done": "false"
     }
   ]
