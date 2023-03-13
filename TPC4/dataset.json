@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "João Loureiro",
+      "usrnm": "juaum"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "desc": "Entrega TPC 4 de EW",
+      "due": "2023-03-15",
+      "who": "João Loureiro",
+      "done": "false"
+    },
+    {
+      "id": "2",
+      "desc": "Entregar CG",
+      "due": "2023-03-10",
+      "who": "João Loureiro",
+      "done": "false"
+    }
+  ]
+}

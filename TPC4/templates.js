@@ -1,86 +1,3 @@
-exports.formTarefas = function(idTarefa,users){
-    var pagHTML = `
-    <div class="w3-container w3-cell">
-        <form class="w3-container w3-card-4 w3-red" method="POST">
-            <input type="hidden" name="id" value=${idTarefa}>
-
-            <h2>Adicionar Tarefa</h2>
-            <p>Insira os dados da nova tarefa que pretende criar</p>
-
-            <p><label>Qual a data limite?</label>
-            <input class="w3-input w3-border" type="date" name="due">
-            
-            <p><label>Quem a irá realizar?</label>
-            <select class="w3-select" name="who">
-            <option value="" disabled selected>Escolha uma pessoa...</option>
-        `
-    for(let i = 0; i<users.length;i++){
-        pagHTML += `
-        <option class="w3-center">${users[i].name}</option>
-        `
-    }
-
-    pagHTML +=   `
-            </select>
-        
-            <p><label>Descrição da tarefa</label>
-            <input class="w3-input w3-border" name="desc" type="text"></p>
-
-            <input type="hidden" name="done" value=false>
-
-            <button class="w3-btn w3-purple w3-mb-2" type="submit">Enviar</button>
-        </form>
-    </div>    
-    `
-}
-
-exports.tarefasListPage = function(tarefas){
-    var pagHTML = `
-        <div class="w3-container w3-cell" style="width:50%">
-            <h2>Tarefas por fazer:</h2>
-    `
-
-    for(let i = 0; i < tarefas.length; i++){
-        if(tarefas[i].done == false){
-            pagHTML += `
-            <div class="w3-container">
-                <p class="w3 right-align">
-                [<a href="/tasks/edit/${tarefas[i].id}"><b>Editar</b></a>][<a href="/tasks/delete/${tarefas[i].id}"><b>Apagar</b></a>][<a href="/tasks/done/${tarefas[i].id}"><b>Feito</b></a>]
-                </p>
-                <p><b>Descrição:</b> ${tarefas[i].desc}</p>
-                <p><b>Reponsável:</b> ${tarefas[i].who}</p>
-                <p><b>Data Limite:</b> ${tarefas[i].due}</p>
-            </div>
-        `
-        }
-    }
-
-    pagHTML += `
-        </div>
-        <div class="w3-container w3-cell" style="width:50%">
-            <h2>Tarefas feitas:</h2>
-    `
-
-    for(let i = 0; i < tarefas.length; i++){
-        if(tarefas[i].done == true){
-            pagHTML += `
-            <div class="w3-container">
-                <p class="w3 right-align">
-                <a href="/tasks/delete/${tarefas[i].id}"><b>Apagar</b></a>
-                </p>
-                <p><b>Descrição:</b> ${tarefas[i].desc}</p>
-                <p><b>Reponsável:</b> ${tarefas[i].who}</p>
-                <p><b>Data Limite:</b> ${tarefas[i].due}</p>
-            </div>
-        `
-        }
-    }
-
-    pagHTML += `
-        </div>
-    `
-} 
-
 exports.mainPage = function(idTarefa,users,tarefas,data){
     var pagHTML = `
     <!DOCTYPE html>
@@ -97,17 +14,14 @@ exports.mainPage = function(idTarefa,users,tarefas,data){
                 <h1>TPC 4 - Lista de Tarefas</h1>
             </header>
 
-        <div class="w3-container w3-cell w3-green">
-            <a href="/user/create" class="w3-btn w3-purple">Adicionar utilizador</a>    
-        </div>
-
         <div class="w3-container w3-cell">
-            <form class="w3-container w3-card-4 w3-blue" method="POST">
+            <a href="/users/create" class="w3-btn w3-purple"><b>Adicionar Utilizador</b></a>
+            <br>    
+            <form action="/tasks/create" class="w3-container w3-card-4 w3-blue" method="POST">
             <fieldset>
-                <legend>Tarefa</legend>
+                <legend>Adicionar Tarefa</legend>
                 <input type="hidden" name="id" value=${idTarefa}>
 
-                <h2>Adicionar Tarefa</h2>
                 <p>Insira os dados da nova tarefa que pretende criar</p>
 
                 <p><label>Descrição da tarefa</label>
@@ -138,14 +52,14 @@ exports.mainPage = function(idTarefa,users,tarefas,data){
 
 
 
-        <div class="w3-container w3-cell" style="width:50%">
+        <div class="w3-container w3-cell w3-border" style="width:50%">
             <h2>Tarefas por fazer:</h2>
 `
 
 for(let i = 0; i < tarefas.length; i++){
-    if(tarefas[i].done == false){
+    if(tarefas[i].done == "false"){
         pagHTML += `
-            <div class="w3-container">
+            <div class="w3-container w3-border">
                 <p class="w3 right-align">
                 [<a href="/tasks/edit/${tarefas[i].id}"><b>Editar</b></a>][<a href="/tasks/delete/${tarefas[i].id}"><b>Apagar</b></a>][<a href="/tasks/done/${tarefas[i].id}"><b>Feito</b></a>]
                 </p>
@@ -160,14 +74,14 @@ for(let i = 0; i < tarefas.length; i++){
 pagHTML += `
         </div>
 
-        <div class="w3-container w3-cell" style="width:50%">
+        <div class="w3-container w3-cell w3-border" style="width:50%">
             <h2>Tarefas feitas:</h2>
 `
 
 for(let i = 0; i < tarefas.length; i++){
-    if(tarefas[i].done == true){
+    if(tarefas[i].done == "true"){
         pagHTML += `
-            <div class="w3-container">
+            <div class="w3-container w3-border">
                 <p class="w3 right-align">
                 <a href="/tasks/delete/${tarefas[i].id}"><b>Apagar</b></a>
                 </p>
@@ -182,7 +96,7 @@ for(let i = 0; i < tarefas.length; i++){
 pagHTML += `
         </div>
 
-        <footer class="w3-container w3-blue">
+        <footer class="w3-container w3-yellow">
                     <h5>João Loureiro - a97257 | Engenharia Web 2023 - Universidade do Minho</h5>
                     <h5>Generated by server: ${data}</h5>
                 </footer>
@@ -212,8 +126,8 @@ exports.userFormPage = function(idUser,data){
                 </header>
             
                 <form class="w3-container" method="POST">
-                    <fieldset>
-                        <legend>Utilizador</legend>
+                    <fieldset class="w3-sand">
+                        <legend><b>Utilizador</b></legend>
                         <input type="hidden" name="id" value=${idUser}>
                         <label>Nome</label>
                         <input class="w3-input w3-round" type="text" name="name"/>
@@ -225,7 +139,7 @@ exports.userFormPage = function(idUser,data){
 
                 </form>
 
-                    <footer class="w3-container w3-blue">
+                    <footer class="w3-container w3-yellow">
                     <h5>João Loureiro - a97257 | Engenharia Web 2023 - Universidade do Minho</h5>
                     <h5>Generated by server: ${data}</h5>
                     </footer>
@@ -234,6 +148,66 @@ exports.userFormPage = function(idUser,data){
         </html>
 
             `
+    return pagHTML          
+}
+
+exports.tarefaFormEditPage = function(tarefa,users,data){
+    var pagHTML = `
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8"/>
+            <link rel="icon" href="favicon.png"/>
+            <link rel="stylesheet" href="w3.css"/>
+            <title>Editar Tarefa</title>
+        </head>
+
+        <body>
+        <div class="w3-card-4">
+            <header class="w3-container w3-red">
+                <h2>Editar Tarefa</h2>
+            </header>
+        
+            <form class="w3-container w3-card-4" method="POST">
+            <fieldset class="w3-sand">
+                <legend><b>Tarefa</b></legend>
+                <input type="hidden" name="id" value=${tarefa.id}>
+
+                <p><label>Descrição da tarefa</label>
+                <input class="w3-input w3-border" name="desc" type="text" value=${tarefa.desc}></p>
+
+                <p><label>Qual a data limite?</label>
+                <input class="w3-input w3-border" type="date" name="due" value=${tarefa.due}>
+                
+                <p><label>Quem a irá realizar?</label>
+                <select class="w3-select" name="who">
+                    <option value=${tarefa.who} disabled selected>Escolha uma pessoa...</option>
+        `
+    for(let i = 0; i<users.length;i++){
+        pagHTML += `
+                    <option class="w3-center">${users[i].name}</option>
+        `
+    }
+
+    pagHTML +=   `
+                </select>
+
+                <input type="hidden" name="done" value=false>
+                </fieldset>  
+
+                <button class="w3-btn w3-green w3-mb-2" type="submit">Enviar</button>
+            </form>
+
+                <footer class="w3-container w3-yellow">
+                <h5>João Loureiro - a97257 | Engenharia Web 2023 - Universidade do Minho</h5>
+                <h5>Generated by server: ${data}</h5>
+                </footer>
+        </div>
+        </body>
+    </html>
+
+        `
+    return pagHTML     
 }
 
 // -----------------------------------------------------------------------------------------
