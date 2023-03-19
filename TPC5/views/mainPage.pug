@@ -11,7 +11,7 @@ block content
       form.w3-container.w3-card-4.w3-blue(method="POST")
         fieldset
             legend Tarefa
-            input(type="hidden" name="id" value=tarefa.id)
+            input(type="hidden" name="id" value=tID)
             label Descrição da tarefa
             input.w3-input.w3-border(type="text" name="desc")
             label Qual a data limite?
@@ -19,7 +19,7 @@ block content
             label Quem a irá realizar?
             select.w3-select(name="who")
                 option(value="" disabled selected) Escolha uma pessoa...
-                    each u in users
+                    each u in utilizadores
                         option.w3-center #[u.id]
             input(type="hidden" name="done" value=false)
                  
