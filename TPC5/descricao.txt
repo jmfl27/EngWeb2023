@@ -1,0 +1,3 @@
+converter o tpc da semana passada para a nova template:
+	pag HTML -> pug
+	server -> comparar com a de esta aula e adaptar

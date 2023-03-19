@@ -1,0 +1,75 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "João Loureiro",
+      "usrnm": "juaum"
+    },
+    {
+      "id": "2",
+      "name": "Arlindo Serra",
+      "usrnm": "arlindusserranus"
+    },
+    {
+      "id": "3",
+      "name": " Quim Barreiros",
+      "usrnm": "quim_Cabritas"
+    },
+    {
+      "id": "4",
+      "name": "Zé Malhoa",
+      "usrnm": "zezocas_smpMalha"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "desc": "Entrega TPC 4 de EW",
+      "due": "2023-03-15",
+      "who": "João Loureiro",
+      "done": "true"
+    },
+    {
+      "id": "2",
+      "desc": "Primeira Entrega de CG",
+      "due": "2023-03-10",
+      "who": "João Loureiro",
+      "done": "true"
+    },
+    {
+      "id": "3",
+      "desc": "Pôr o carro na garagem da vizinha",
+      "due": "2023-04-05",
+      "who": "Quim Barreiros",
+      "done": "false"
+    },
+    {
+      "id": "4",
+      "desc": "Ir ao Baile de Verão",
+      "due": "2023-07-18",
+      "who": "Zé Malhoa",
+      "done": "false"
+    },
+    {
+      "id": "5",
+      "desc": "Comprar alface no LIDL",
+      "due": "2023-03-15",
+      "who": "Arlindo Serra",
+      "done": "false"
+    },
+    {
+      "id": "6",
+      "desc": "Encontrar travessa para enfeitar o jantar de Natal ",
+      "due": "2022-12-25",
+      "who": "Quim Barreiros",
+      "done": "true"
+    },
+    {
+      "id": "7",
+      "desc": "Entregar TPC 5 de EW",
+      "due": "2023-03-22",
+      "who": "João Loureiro",
+      "done": "false"
+    }
+  ]
+}
