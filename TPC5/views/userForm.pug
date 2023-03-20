@@ -5,11 +5,11 @@ block content
     header.w3-container.w3-red
         h2 Formulário de Novo Utilizador
         h3 
-            button.w3-btn.w3-pale-red #[a(herf="/") Voltar ao Início]    
+            button.w3-btn.w3-pale-red #[a(href="/") #[b Voltar ao Início]]    
     form.w3-container(method="POST")
         fieldset.w3-sand
-            legend Utilizador
-            input(type="hidden" name="id" value=#{idUser})
+            legend #[b Utilizador]
+            input(type="hidden" name="id" value=idUser)
             label Nome
             input.w3-input.w3-round(type="text" name="name")
             label Username

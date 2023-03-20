@@ -5,10 +5,10 @@ block content
     header.w3-container.w3-red
         h2 Editar Tarefa
         h3 
-            button.w3-btn.w3-pale-red #[a(herf="/") Voltar ao Início]    
+            button.w3-btn.w3-pale-red #[a(href="/") #[b Voltar ao Início]]    
     form.w3-container.w3-card-4(method="POST")
         fieldset.w3-sand
-            legend Tarefa
+            legend #[b Tarefa]
             input(type="hidden" name="id" value=tarefa.id)
             label Descrição da tarefa
             input.w3-input.w3-border(type="text" name="desc" value=tarefa.desc)
@@ -17,9 +17,9 @@ block content
             label Quem a irá realizar?
             select.w3-select(name="who")
                 option(value=tarefa.who disabled selected) Escolha uma pessoa...
-                    each u in users
-                        option.w3-center #[u.id]
-            input(type="hidden" name="done" value=false)
+                    each u in utilizadores
+                        option.w3-center #{u.name}
+            input(type="hidden" name="done" value="false")
                  
             button.w3-btn.w3-purple.w3-mb-2(type="submit") Enviar
 

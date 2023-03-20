@@ -1,90 +1,116 @@
 var express = require('express');
 var router = express.Router();
-var Aluno = require('../controllers/aluno')
+var Data = require('../controllers/data')
 
-/* GET home page. */
+// GET home page
 router.get('/', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  Aluno.list()
-    .then(alunos => {
-      res.render('index', { slist: alunos, d: data });
+  Data.tasksList()
+    .then(tasks => {
+      var idTask = tasks.length + 1
+      Data.usersList()
+      .then(users => {
+        res.render('mainPage', { tarefas: tasks, tID : idTask, utilizadores : users, d: data });
+      })
+      .catch(erro => {
+        res.render('error', {error: erro, message: "Erro na obtenção da lista de utilizadores"})
+      })
     })
     .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção da lista de alunos"})
+      res.render('error', {error: erro, message: "Erro na obtenção da lista de tarefas"})
     })
 });
 
-// GET Student Form
-router.get('/alunos/registo', function(req, res, next) {
+// GET User Form
+router.get('/users/create', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  res.render('addForm', {d : data});
+  Data.usersList()
+  .then(users => {
+    var id = users.length + 1
+    res.render('userForm', {d : data, idUser : id});
+  })
+  .catch(erro => {
+    res.render('error', {error: erro, message: "Erro na obtenção da lista de utilizadores"})
+  })
 });
 
-/* GET Student page. */
-router.get('/alunos/:idAluno', function(req, res, next) {
+// GET Task Edit Form
+router.get('/tasks/edit/:idTask', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  Aluno.getAluno(req.params.idAluno)
-    .then(aluno => {
-      res.render('aluno', { a: aluno, d: data });
+  Data.getTask(req.params.idTask)
+    .then(task => {
+      Data.usersList()
+      .then(users => {
+        res.render('tarefaFormEdit', { tarefa: task, utilizadores : users, d: data });
+      })
+      .catch(erro => {
+        res.render('error', {error: erro, message: "Erro na obtenção da lista de utilizadores"})
+      })
     })
     .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção do registo de aluno"})
+      res.render('error', {error: erro, message: "Erro na obtenção da lista de tarefas"})
     })
 });
 
-/* GET Student update page. */
-router.get('/alunos/edit/:idAluno', function(req, res, next) {
+//GET Task delete
+router.get('/tasks/delete/:idTask', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  Aluno.getAluno(req.params.idAluno)
-    .then(aluno => {
-      res.render('updateForm', { a: aluno, d: data });
-    })
-    .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção do registo de aluno"})
-    })
-});
-
-/* GET Student delete page. */
-router.get('/alunos/delete/:idAluno', function(req, res, next) {
-  var data = new Date().toISOString().substring(0, 16)
-  Aluno.getAluno(req.params.idAluno)
-    .then(aluno => {
-      res.render('deleteForm', { a: aluno, d: data });
-    })
-    .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção do registo de aluno"})
-    })
-});
-
-/* GET Student delete page. */
-router.get('/alunos/deleteConfirm/:idAluno', function(req, res, next) {
-  var data = new Date().toISOString().substring(0, 16)
-  Aluno.deleteAluno(req.params.idAluno)
-    .then(aluno => {
+  Data.deleteTask(req.params.idTask)
+    .then(task => {
       res.redirect('/');
     })
     .catch(erro => {
-      res.render('error', {error: erro, message: "Erro na obtenção do registo de aluno"})
+      res.render('error', {error: erro, message: "Erro na obtenção da tarefa"})
     })
 });
 
-// POST Student
-router.post('/alunos/registo', function(req, res, next) {
+//GET Task done
+router.get('/tasks/done/:idTask', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  Aluno.addAluno(req.body)
-    .then(aluno => {
-      res.render('addAlunosConfirm', {a:aluno, d:data})
+  Data.getTask(req.params.idTask)
+    .then(task => {
+      task.done = "true"
+      Data.updateTask(task)
+      .then(users => {
+        res.redirect('/');
+      })
+      .catch(erro => {
+        res.render('error', {error: erro, message: "Erro no armazenamento do registo de tarefa"})
+      })
+    })
+    .catch(erro => {
+      res.render('error', {error: erro, message: "Erro na obtenção da tarefa"})
+    })
+});
+
+// POST User
+router.post('/users/create', function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  Data.addUser(req.body)
+    .then(user => {
+      res.redirect('/');
     }).catch(erro => {
-      res.render('error', {error: erro, message: "Erro no armazenamento do registo de aluno"})
+      res.render('error', {error: erro, message: "Erro no armazenamento do registo de utlizador"})
     })
 });
 
-// POST Student update
-router.post('/alunos/edit/:idAluno', function(req, res, next) {
+// POST Task
+router.post('/tasks/create', function(req, res, next) {
   var data = new Date().toISOString().substring(0, 16)
-  Aluno.updateAluno(req.body)
-    .then(aluno => {
-      res.render('updateAlunoConfirm', {a:aluno, d:data})
+  Data.addTask(req.body)
+    .then(task => {
+      res.redirect('/');
+    }).catch(erro => {
+      res.render('error', {error: erro, message: "Erro no armazenamento do registo de tarefa"})
+    })
+});
+
+// POST Task update
+router.post('/tasks/edit/:idTask', function(req, res, next) {
+  var data = new Date().toISOString().substring(0, 16)
+  Data.updateTask(req.body)
+    .then(tawsk => {
+      res.redirect('/');
     }).catch(erro => {
       res.render('error', {error: erro, message: "Erro na atualização do registo de aluno"})
     })
