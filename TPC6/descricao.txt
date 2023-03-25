@@ -1,0 +1,8 @@
+pegar no dataset da segunda semana de aulas (das pessoas), o "dataset-extra1.json" -> Pessoas : dataset-extra1.json
+
+1. Analisar a informação e criar modelo de bd
+
+2. Criar API de dados a fazer as 4 operaçoes vista de hoje
+
+3. Programa em .js ou .py que faz o import do dataset da BD, usando a API, ou seja, le o ficheiro e mete a informaçao
+na bd (mongo import numa linguagem a tua escolha)
