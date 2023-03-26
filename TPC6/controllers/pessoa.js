@@ -33,6 +33,12 @@ module.exports.addPessoa = p => {
 
 module.exports.updatePessoa = p => {
     return Pessoa.updateOne({_id: p._id}, p)
+    .then(dados=>{
+        return dados
+    })
+    .catch(erro =>{
+        return erro
+    })
 }
 
 module.exports.deletePessoa = id => {
